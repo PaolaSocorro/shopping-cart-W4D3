@@ -39,7 +39,7 @@ def list_melons():
     """Return page showing all the melons ubermelon has to offer"""
 
     melons = model.Melon.get_all()
-    # print session
+    print session
     return render_template("all_melons.html",
                            melon_list=melons)
 
@@ -60,11 +60,18 @@ def show_melon(id):
 @app.route("/cart")
 def shopping_cart():
     """Display content of shopping cart."""
+    
+    print "HERE'S ALL THE ITEMS IN YOUR SESSION: ", session
 
-    # TODO: Display the contents of the shopping cart.
-    #   - The cart is a list in session containing melons added
+    """Point to key of cart in the session. retrieve values 
+    for that key. it will be a list of melon ids.
+    Pass list of melons ids to template.
+    iterate over list in template. 
+    use class to find each melon by id in database. 
+    use jinja to iterate over it and display melons. """
 
     return render_template("cart.html")
+
 
 
 @app.route("/add_to_cart/<int:id>")
@@ -75,10 +82,15 @@ def add_to_cart(id):
     page and display a confirmation message: 'Successfully added to cart'.
     """
 
-    # TODO: Finish shopping cart functionality
-    #   - use session variables to hold cart list
 
-    return "Oops! This needs to be implemented!"
+    if "cart" not in session:
+        session["cart"]=[]
+
+    session["cart"].append(id) 
+    
+    flash("Your item has been added to the cart!")
+
+    return redirect("/cart")
 
 
 @app.route("/login", methods=["GET"])
