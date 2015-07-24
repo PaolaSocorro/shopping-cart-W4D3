@@ -39,7 +39,7 @@ def list_melons():
     """Return page showing all the melons ubermelon has to offer"""
 
     melons = model.Melon.get_all()
-    print session
+    # print session
     return render_template("all_melons.html",
                            melon_list=melons)
 
@@ -52,7 +52,7 @@ def show_melon(id):
     """
 
     melon = model.Melon.get_by_id(id)
-    print melon
+    # print melon
     return render_template("melon_details.html",
                            display_melon=melon)
 
@@ -61,7 +61,7 @@ def show_melon(id):
 def shopping_cart():
     """Display content of shopping cart."""
     
-    print "HERE'S ALL THE ITEMS IN YOUR SESSION: ", session
+    # print "HERE'S ALL THE ITEMS IN YOUR SESSION: ", session
 
     """Point to key of cart in the session. retrieve values 
     for that key. it will be a list of melon ids.
@@ -70,7 +70,29 @@ def shopping_cart():
     use class to find each melon by id in database. 
     use jinja to iterate over it and display melons. """
 
-    return render_template("cart.html")
+
+    # cart_items_by_id = session['cart'] 
+    cart_ids = session['cart'] 
+    print "HELLO", cart_ids
+    #make a dictionary counting number of times each melon id appears in the list. 
+    #The keys will be the id numbers and the values will be the qty.
+    cart_quantity = {}
+    for ids in cart_ids:
+        if ids in cart_quantity:
+            cart_quantity[ids]+=1
+        else:
+            cart_quantity[ids] = 1 
+
+    print "FIND ME",cart_quantity
+
+    ids_list = list(cart_quantity.keys())
+
+    for values in ids_list:
+        melon = model.Melon.get_by_id(values)
+        amount = cart_quantity[values]
+        print melon    
+
+    return render_template("cart.html",our_melon=melon,quantity=amount)
 
 
 
